@@ -1,0 +1,152 @@
+﻿
+@{
+    ViewBag.Title = "Home";
+}
+
+@section headerScripts{
+    }
+
+
+<div class="row">
+    <div class="col-md-6">
+        <h2>Index</h2>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <input type="text" class="form-control" style="display:inline-block" placeholder="Filtro" />
+            <button type="button" class="btn btn-default" style="width:auto; display:inline-block"><span class="glyphicon glyphicon-search"></span></button>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="tabla">
+    <div class="col-md-3">
+        Publicacion
+    </div>
+    <div class="col-md-3">
+        Cantidad de "Me gustas"
+    </div>
+    <div class="col-md-3">
+        Cantidad de "Comentarios"
+    </div>
+    <div class="col-md-3">
+        .
+    </div>
+</div>
+
+@section footerScripts{
+    @*<script id="facebook-jssdk" src="https://connect.facebook.net/es_LA/sdk/debug.js" src="https://connect.facebook.net/es_LA/sdk.js"></script>*@
+    <script>
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) { return; }
+            js = d.createElement(s); js.id = id;
+            js.src = "https://connect.facebook.net/es_LA/sdk/debug.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+        var accessToken;
+        var FB;
+        var cola = new Array();
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: '1410882755639041', //appId
+                autoLogAppEvents: true,
+                xfbml: true,
+                status: true,
+                version:'v2.11'
+            });
+
+            //bloque de codigo para loguearse o verificar estado
+            FB.getLoginStatus(function (response) {
+                if (response) {
+                    if (response.status === 'connected') {
+                        accessToken = response.authResponse.accessToken;
+                        console.log(response);
+                        console.log('ya logueado');
+                        Encolar(ListarPublicaciones);
+                    }
+                    else {
+                        FB.login();
+                    }
+                }
+            });
+
+            procesarColaFunciones();
+        };
+        
+        function Encolar(funcion) {
+            if (FB == undefined) {
+                cola.push(funcion);
+            }
+            else {
+                funcion();
+            }
+        }
+
+        function procesarColaFunciones() {
+            var f;
+            while (f = cola.shift())
+                f();
+        }
+
+
+        //Lista las ultimas 25 publicaciones de una pagina en facebook
+        function ListarPublicaciones() {
+            FB.api(
+                '/cotastelevision/posts', //feed
+                'get',
+                {
+                    //fields:'id, link, message, name, type, shares,likes.summary(true), comments.summary(true)',
+                    access_token: accessToken
+                },
+                function (response) {
+                    var area = document.getElementById("area");
+                    console.log(response);
+                    //area.innerText = JSON.stringify(response, null, 2);
+                    var listado = JSON.parse(JSON.stringify(response.data));
+                    console.log("Intento de convertir a JSON: ", listado);
+                    var tabla = document.getElementById("tabla");
+                    var html = "";
+                    //for (var elemento in listado) {
+                    //    var item = listado[elemento];
+                    //    html += '<div class="col-md-3">'+
+                    //    '<a href="#" onclick=LlenarModal("'+item.link+'")>'+BuscarHashtag(item.message)+ '-'+item.type+'</a>'+
+                    //    '</div>'+
+                    //    '<div class="col-md-3">' +
+                    //        item.likes.summary.total_count +
+                    //        '</div>' +
+                    //        '<div class="col-md-3">' +
+                    //        item.comments.summary.total_count +
+                    //        '</div>' +
+                    //        '<div class="col-md-3">' +
+                    //        '<button type="button" class="btn btn-default">Evaluar</button>' +
+                    //        '</div>';
+                    //}
+                    tabla.innerHTML += html;
+                }
+            );
+        }
+
+        //Encolar(ListarPublicaciones);
+        function LlenarModal(url) {
+            var modal = document.getElementById("fbModal");
+            var cuerpo = document.getElementById("ModalBody");
+            cuerpo.innerHTML = "<div class='fb-post' data-href='" + url + "' data-width='500' data-show-text='true'></div>";
+            FB.XFBML.parse();
+            $("#fbModal").modal();
+        }
+
+
+        function BuscarHashtag(texto) {
+            if (texto &&texto.includes('#')) {
+                var partehashtag = texto.split('#');
+                var hashtag = partehashtag[1].split(' ')[0];
+                return '#'+hashtag;
+            }
+            else {
+                return 'Publicacion';
+            }
+        }
+    </script>
+    }
