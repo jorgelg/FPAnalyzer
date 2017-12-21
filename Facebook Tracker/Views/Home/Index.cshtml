@@ -4,33 +4,40 @@
 }
 
 @section headerScripts{
+    <link rel="stylesheet" href="~/Content/UserDefined/Index.css" type="text/css"/>
     }
 
 
-<div class="row">
-    <div class="col-md-6">
-        <h2>Index</h2>
+    <h2>
+        Facebook Tracker
+    </h2>
+
+    <div class="col-md-12">
+        <select class="form-control unlimit">
+            <option>Cotas Television</option>
+            <option>Cotas Internet y Telefonia</option>
+            <option>Cotas</option>
+        </select>
     </div>
-    <div class="col-md-6">
-        <div class="form-group">
-            <input type="text" class="form-control" style="display:inline-block" placeholder="Filtro" />
-            <button type="button" class="btn btn-default" style="width:auto; display:inline-block"><span class="glyphicon glyphicon-search"></span></button>
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Publicaciones </h3>
+        </div>
+        <div class="col-md-6" style="margin-top:20px;margin-bottom:10px;">
+            <div class="input-group" style="display:flex;">
+                <input type="text" class="form-control" placeholder="Buscar...">
+                <span class="input-group-btn">
+                    <button class="btn btn-info" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                </span>
+            </div>
         </div>
     </div>
-</div>
 
-<div class="row" id="tabla">
-    <div class="col-md-3">
-        Publicacion
-    </div>
-    <div class="col-md-3">
-        Cantidad de "Me gustas"
-    </div>
-    <div class="col-md-3">
-        Cantidad de "Comentarios"
-    </div>
-    <div class="col-md-3">
-        .
+<div class="row relativize">
+    <div class="col-md-12">
+        <img class="img-post" src="/Resources/Images/casa.png" />
+        <p>Publicacion 1. Texto ejemplo de lo que debería haber en la imagen y demas que viene de la publicacion de facebook</p>
+        <button class="btn btn-primary pull-bottom">Analizar</button>
     </div>
 </div>
 
@@ -98,32 +105,14 @@
                 'get',
                 {
                     //fields:'id, link, message, name, type, shares,likes.summary(true), comments.summary(true)',
+                    fields:'created_time,object_id,full_picture,link,message',
                     access_token: accessToken
                 },
                 function (response) {
-                    var area = document.getElementById("area");
+
                     console.log(response);
-                    //area.innerText = JSON.stringify(response, null, 2);
                     var listado = JSON.parse(JSON.stringify(response.data));
                     console.log("Intento de convertir a JSON: ", listado);
-                    var tabla = document.getElementById("tabla");
-                    var html = "";
-                    //for (var elemento in listado) {
-                    //    var item = listado[elemento];
-                    //    html += '<div class="col-md-3">'+
-                    //    '<a href="#" onclick=LlenarModal("'+item.link+'")>'+BuscarHashtag(item.message)+ '-'+item.type+'</a>'+
-                    //    '</div>'+
-                    //    '<div class="col-md-3">' +
-                    //        item.likes.summary.total_count +
-                    //        '</div>' +
-                    //        '<div class="col-md-3">' +
-                    //        item.comments.summary.total_count +
-                    //        '</div>' +
-                    //        '<div class="col-md-3">' +
-                    //        '<button type="button" class="btn btn-default">Evaluar</button>' +
-                    //        '</div>';
-                    //}
-                    tabla.innerHTML += html;
                 }
             );
         }

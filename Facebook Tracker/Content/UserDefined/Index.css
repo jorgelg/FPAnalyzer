@@ -1,0 +1,18 @@
+﻿.unlimit{
+    max-width:unset;
+}
+
+.img-post{
+    float:left !important;
+    width:150px;
+    height:150px;
+}
+
+.relativize{
+    position:relative;
+}
+
+.pull-bottom{
+    position:absolute;
+    bottom:0;
+}
