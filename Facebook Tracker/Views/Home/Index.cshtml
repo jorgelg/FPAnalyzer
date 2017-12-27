@@ -5,6 +5,8 @@
 
 @section headerScripts{
     <link rel="stylesheet" href="~/Content/UserDefined/Index.css" type="text/css"/>
+    <link rel="stylesheet" href="~/Content/External/FBReactions-Ionel_Cucu.css" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
     }
 
 
@@ -13,10 +15,10 @@
     </h2>
 
     <div class="col-md-12">
-        <select class="form-control unlimit">
-            <option>Cotas Television</option>
-            <option>Cotas Internet y Telefonia</option>
-            <option>Cotas</option>
+        <select class="form-control unlimit" onchange="getpage()" id="TargetPage">
+            <option value="cotastelevision">Cotas Television</option>
+            <option value="cotastelefoniaeinternet">Cotas Internet y Telefonia</option>
+            <option value=""> + Anadir nuevo</option>
         </select>
     </div>
     <div class="row">
@@ -33,17 +35,14 @@
         </div>
     </div>
 
-<div class="row relativize">
-    <div class="col-md-12">
-        <img class="img-post" src="/Resources/Images/casa.png" />
-        <p>Publicacion 1. Texto ejemplo de lo que debería haber en la imagen y demas que viene de la publicacion de facebook</p>
-        <button class="btn btn-primary pull-bottom">Analizar</button>
-    </div>
+<div class="row relativize" id="Listado">
+    
 </div>
 
 @section footerScripts{
     @*<script id="facebook-jssdk" src="https://connect.facebook.net/es_LA/sdk/debug.js" src="https://connect.facebook.net/es_LA/sdk.js"></script>*@
     <script>
+        var elementos = null;
         (function (d, s, id) {
             var js, fjs = d.getElementsByTagName(s)[0];
             if (d.getElementById(id)) { return; }
@@ -97,35 +96,105 @@
                 f();
         }
 
+        function formatdate(datetime) {
+            var fecha = new Date(datetime);
+            var opcioneshoras = { hour: '2-digit', minute: '2-digit' };
+            var opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'};
+            return fecha.toLocaleString('latn',opcioneshoras) + ', ' +fecha.toLocaleString('latn',opciones);
+        }
+
+        function formatpost(elemento) {
+            var format = '';
+            format = '<div class="col-md-12 post-box">' +
+                '<img class="img-post" src="' + elemento.full_picture + '" />' +
+                '<p class="text-margin">' + elemento.message + '</p>' +
+                '<div class="emoji-container">'+
+                '<div class="emoji like">' +
+                elemento.reactions_like.summary.total_count+
+                        '<div class="icon" data-title="Me Gusta"></div>'+
+                    '</div>'+
+                '<div class="emoji love">' +
+                elemento.reactions_love.summary.total_count+
+                        '<div class="icon" data-title="Me Encanta"></div>'+
+                    '</div>'+
+                '<div class="emoji haha">' +
+                elemento.reactions_haha.summary.total_count+
+                        '<div class="icon" data-title="Me Divierte"></div>'+
+                    '</div>'+
+                '<div class="emoji wow">' +
+                elemento.reactions_wow.summary.total_count+
+                        '<div class="icon" data-title="Me Asombra"></div>'+
+                    '</div>'+
+                '<div class="emoji sad">' +
+                elemento.reactions_sad.summary.total_count+
+                        '<div class="icon" data-title="Me Entristece"></div>'+
+                    '</div>'+
+                '<div class="emoji angry">' +
+                elemento.reactions_angry.summary.total_count+
+                        '<div class="icon" data-title="Me Enoja"></div>'+
+                    '</div>'+
+                '</div>'+
+                '<p class="comment-align">'+ '<a href="#">'+ elemento.comments.summary.total_count +' Comentarios'+'</a>' +'</p>'+
+                '<p class="subtitle">' + formatdate(elemento.created_time) + '</p>' +
+                '<button class="btn btn-primary pull-bottom">Analizar</button>' +
+                '</div>';
+            return format;
+        }
+
 
         //Lista las ultimas 25 publicaciones de una pagina en facebook
-        function ListarPublicaciones() {
+        function ListarPublicaciones(idpagina='cotastelevision') {
             FB.api(
-                '/cotastelevision/posts', //feed
+                '/'+idpagina+'/posts', //feed
                 'get',
                 {
                     //fields:'id, link, message, name, type, shares,likes.summary(true), comments.summary(true)',
-                    fields:'created_time,object_id,full_picture,link,message',
+                    fields:'created_time,object_id,full_picture,link,message,comments.summary(true).limit(0),reactions.type(HAHA).limit(0).summary(total_count).as(reactions_haha),reactions.type(NONE).limit(0).summary(total_count).as(reactions_none),reactions.type(LIKE).limit(0).summary(total_count).as(reactions_like),reactions.type(LOVE).limit(0).summary(total_count).as(reactions_love),reactions.type(WOW).limit(0).summary(total_count).as(reactions_wow),reactions.type(SAD).limit(0).summary(total_count).as(reactions_sad),reactions.type(ANGRY).limit(0).summary(total_count).as(reactions_angry),reactions.type(THANKFUL).limit(0).summary(total_count).as(reactions_thankful)',
                     access_token: accessToken
                 },
                 function (response) {
 
                     console.log(response);
-                    var listado = JSON.parse(JSON.stringify(response.data));
-                    console.log("Intento de convertir a JSON: ", listado);
+                    if (response.data) {
+                        var listado = JSON.parse(JSON.stringify(response.data));
+                        console.log("Intento de convertir a JSON: ", listado);
+                        var html = '';
+                        var i = 0;
+                        for (i = 0; i < listado.length; i++) {
+                            html += formatpost(listado[i]);
+                        }
+                        document.getElementById("Listado").innerHTML = html;
+                        elementos=response.paging.next;
+                    }
                 }
             );
         }
 
         //Encolar(ListarPublicaciones);
-        function LlenarModal(url) {
-            var modal = document.getElementById("fbModal");
-            var cuerpo = document.getElementById("ModalBody");
-            cuerpo.innerHTML = "<div class='fb-post' data-href='" + url + "' data-width='500' data-show-text='true'></div>";
-            FB.XFBML.parse();
-            $("#fbModal").modal();
-        }
+        //function LlenarModal(url) {
+        //    var modal = document.getElementById("fbModal");
+        //    var cuerpo = document.getElementById("ModalBody");
+        //    cuerpo.innerHTML = "<div class='fb-post' data-href='" + url + "' data-width='500' data-show-text='true'></div>";
+        //    FB.XFBML.parse();
+        //    $("#fbModal").modal();
+        //}
 
+        function navegador(next) {
+            FB.api(
+                next, //feed
+                'get',
+                {
+                },
+                function (response) {
+
+                    console.log(response);
+                    if (response.data) {
+                        var listado = JSON.parse(JSON.stringify(response.data));
+                        console.log("Intento next JSON: ", listado);
+                    }
+                }
+            );
+        }
 
         function BuscarHashtag(texto) {
             if (texto &&texto.includes('#')) {
@@ -136,6 +205,12 @@
             else {
                 return 'Publicacion';
             }
+        }
+
+        function getpage() {
+            var selector = document.getElementById("TargetPage");
+            var id = selector.options[selector.selectedIndex].value;
+            Encolar(function () { ListarPublicaciones(id); });
         }
     </script>
     }
