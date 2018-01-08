@@ -4,39 +4,39 @@
 }
 
 @section headerScripts{
-    <link rel="stylesheet" href="~/Content/UserDefined/Index.css" type="text/css"/>
+    <link rel="stylesheet" href="~/Content/UserDefined/Index.css" type="text/css" />
     <link rel="stylesheet" href="~/Content/External/FBReactions-Ionel_Cucu.css" type="text/css" />
     <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
-    }
+}
 
 
-    <h2>
-        Facebook Tracker
-    </h2>
+<h2>
+    Facebook Tracker
+</h2>
 
-    <div class="col-md-12">
-        <select class="form-control unlimit" onchange="getpage()" id="TargetPage">
-            <option value="cotastelevision">Cotas Television</option>
-            <option value="cotastelefoniaeinternet">Cotas Internet y Telefonia</option>
-            <option value=""> + Anadir nuevo</option>
-        </select>
+<div class="col-md-12">
+    <select class="form-control unlimit" onchange="getpage()" id="TargetPage">
+        <option value="cotastelevision">Cotas Television</option>
+        <option value="cotastelefoniaeinternet">Cotas Internet y Telefonia</option>
+        <option value=""> + Anadir nuevo</option>
+    </select>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <h3>Publicaciones </h3>
     </div>
-    <div class="row">
-        <div class="col-md-6">
-            <h3>Publicaciones </h3>
-        </div>
-        <div class="col-md-6" style="margin-top:20px;margin-bottom:10px;">
-            <div class="input-group" style="display:flex;">
-                <input type="text" class="form-control" placeholder="Buscar...">
-                <span class="input-group-btn">
-                    <button class="btn btn-info" type="button"><span class="glyphicon glyphicon-search"></span></button>
-                </span>
-            </div>
+    <div class="col-md-6" style="margin-top:20px;margin-bottom:10px;">
+        <div class="input-group" style="display:flex;">
+            <input type="text" class="form-control" placeholder="Buscar...">
+            <span class="input-group-btn">
+                <button class="btn btn-info" type="button"><span class="glyphicon glyphicon-search"></span></button>
+            </span>
         </div>
     </div>
+</div>
 
 <div class="row relativize" id="Listado">
-    
+
 </div>
 
 @section footerScripts{
@@ -60,7 +60,7 @@
                 autoLogAppEvents: true,
                 xfbml: true,
                 status: true,
-                version:'v2.11'
+                version: 'v2.10'
             });
 
             //bloque de codigo para loguearse o verificar estado
@@ -80,7 +80,7 @@
 
             procesarColaFunciones();
         };
-        
+
         function Encolar(funcion) {
             if (FB == undefined) {
                 cola.push(funcion);
@@ -99,8 +99,8 @@
         function formatdate(datetime) {
             var fecha = new Date(datetime);
             var opcioneshoras = { hour: '2-digit', minute: '2-digit' };
-            var opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'};
-            return fecha.toLocaleString('latn',opcioneshoras) + ', ' +fecha.toLocaleString('latn',opciones);
+            var opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            return fecha.toLocaleString('latn', opcioneshoras) + ', ' + fecha.toLocaleString('latn', opciones);
         }
 
         function formatpost(elemento) {
@@ -108,33 +108,33 @@
             format = '<div class="col-md-12 post-box">' +
                 '<img class="img-post" src="' + elemento.full_picture + '" />' +
                 '<p class="text-margin">' + elemento.message + '</p>' +
-                '<div class="emoji-container">'+
+                '<div class="emoji-container">' +
                 '<div class="emoji like">' +
-                elemento.reactions_like.summary.total_count+
-                        '<div class="icon" data-title="Me Gusta"></div>'+
-                    '</div>'+
+                elemento.reactions_like.summary.total_count +
+                '<div class="icon" data-title="Me Gusta"></div>' +
+                '</div>' +
                 '<div class="emoji love">' +
-                elemento.reactions_love.summary.total_count+
-                        '<div class="icon" data-title="Me Encanta"></div>'+
-                    '</div>'+
+                elemento.reactions_love.summary.total_count +
+                '<div class="icon" data-title="Me Encanta"></div>' +
+                '</div>' +
                 '<div class="emoji haha">' +
-                elemento.reactions_haha.summary.total_count+
-                        '<div class="icon" data-title="Me Divierte"></div>'+
-                    '</div>'+
+                elemento.reactions_haha.summary.total_count +
+                '<div class="icon" data-title="Me Divierte"></div>' +
+                '</div>' +
                 '<div class="emoji wow">' +
-                elemento.reactions_wow.summary.total_count+
-                        '<div class="icon" data-title="Me Asombra"></div>'+
-                    '</div>'+
+                elemento.reactions_wow.summary.total_count +
+                '<div class="icon" data-title="Me Asombra"></div>' +
+                '</div>' +
                 '<div class="emoji sad">' +
-                elemento.reactions_sad.summary.total_count+
-                        '<div class="icon" data-title="Me Entristece"></div>'+
-                    '</div>'+
+                elemento.reactions_sad.summary.total_count +
+                '<div class="icon" data-title="Me Entristece"></div>' +
+                '</div>' +
                 '<div class="emoji angry">' +
-                elemento.reactions_angry.summary.total_count+
-                        '<div class="icon" data-title="Me Enoja"></div>'+
-                    '</div>'+
-                '</div>'+
-                '<p class="comment-align">'+ '<a href="#">'+ elemento.comments.summary.total_count +' Comentarios'+'</a>' +'</p>'+
+                elemento.reactions_angry.summary.total_count +
+                '<div class="icon" data-title="Me Enoja"></div>' +
+                '</div>' +
+                '</div>' +
+                '<p class="comment-align">' + '<a href="#">' + elemento.comments.summary.total_count + ' Comentarios' + '</a>' + '</p>' +
                 '<p class="subtitle">' + formatdate(elemento.created_time) + '</p>' +
                 '<button class="btn btn-primary pull-bottom">Analizar</button>' +
                 '</div>';
@@ -143,13 +143,13 @@
 
 
         //Lista las ultimas 25 publicaciones de una pagina en facebook
-        function ListarPublicaciones(idpagina='cotastelevision') {
+        function ListarPublicaciones(idpagina = 'cotastelevision') {
             FB.api(
-                '/'+idpagina+'/posts', //feed
+                '/' + idpagina + '/posts', //feed
                 'get',
                 {
                     //fields:'id, link, message, name, type, shares,likes.summary(true), comments.summary(true)',
-                    fields:'created_time,object_id,full_picture,link,message,comments.summary(true).limit(0),reactions.type(HAHA).limit(0).summary(total_count).as(reactions_haha),reactions.type(NONE).limit(0).summary(total_count).as(reactions_none),reactions.type(LIKE).limit(0).summary(total_count).as(reactions_like),reactions.type(LOVE).limit(0).summary(total_count).as(reactions_love),reactions.type(WOW).limit(0).summary(total_count).as(reactions_wow),reactions.type(SAD).limit(0).summary(total_count).as(reactions_sad),reactions.type(ANGRY).limit(0).summary(total_count).as(reactions_angry),reactions.type(THANKFUL).limit(0).summary(total_count).as(reactions_thankful)',
+                    fields: 'created_time,object_id,full_picture,link,message,comments.summary(true).limit(0),reactions.type(HAHA).limit(0).summary(total_count).as(reactions_haha),reactions.type(NONE).limit(0).summary(total_count).as(reactions_none),reactions.type(LIKE).limit(0).summary(total_count).as(reactions_like),reactions.type(LOVE).limit(0).summary(total_count).as(reactions_love),reactions.type(WOW).limit(0).summary(total_count).as(reactions_wow),reactions.type(SAD).limit(0).summary(total_count).as(reactions_sad),reactions.type(ANGRY).limit(0).summary(total_count).as(reactions_angry),reactions.type(THANKFUL).limit(0).summary(total_count).as(reactions_thankful)',
                     access_token: accessToken
                 },
                 function (response) {
@@ -164,10 +164,31 @@
                             html += formatpost(listado[i]);
                         }
                         document.getElementById("Listado").innerHTML = html;
-                        elementos=response.paging.next;
+                        elementos = response.paging.next;
                     }
                 }
             );
+        }
+
+        function formatComment(elemento) {
+
+            var formato = '';
+
+            formato += '<p>' +
+                '< a href= "https://www.facebook.com/' + elemento.from.id + '" >' + elemento.from.name + '</a >' +
+                '</p >' +
+                '<p>' +
+                elemento.message +
+                '</p>';
+            return formato;
+        }
+
+        function ListarComentarios(lista) {
+
+            var html = '';
+            for (var i = 0; i < lista.length; i++) {
+                html += formatComment(lista[i]);
+            }
         }
 
         //Encolar(ListarPublicaciones);
@@ -197,10 +218,10 @@
         }
 
         function BuscarHashtag(texto) {
-            if (texto &&texto.includes('#')) {
+            if (texto && texto.includes('#')) {
                 var partehashtag = texto.split('#');
                 var hashtag = partehashtag[1].split(' ')[0];
-                return '#'+hashtag;
+                return '#' + hashtag;
             }
             else {
                 return 'Publicacion';
@@ -213,4 +234,4 @@
             Encolar(function () { ListarPublicaciones(id); });
         }
     </script>
-    }
+}
